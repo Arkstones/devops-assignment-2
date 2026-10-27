@@ -1,0 +1,16 @@
+# Run the diagnostic tool with Docker Compose:
+#   docker compose build
+#   docker compose run --rm diagnostic system
+#   docker compose run --rm diagnostic network google.com
+#   docker compose run --rm diagnostic disk
+
+services:
+  diagnostic:
+    build: .
+    image: diagnostic-tool
+    # default command, replaced by whatever you put after "diagnostic" in compose run
+    command: ["help"]
+    # the tool only reads information, so the container filesystem can be read-only
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
