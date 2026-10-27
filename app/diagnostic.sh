@@ -137,6 +137,13 @@ valid_host() {
 resolve_host() {
     local host="$1"
     local result=""
+
+    # an IPv4 address does not need resolving
+    if [[ "$host" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "$host"
+        return
+    fi
+
     if command -v getent >/dev/null 2>&1; then
         result=$(getent ahosts "$host" 2>/dev/null | awk '{print $1}' | sort -u)
         # some getent versions only know "hosts"
@@ -146,6 +153,10 @@ resolve_host() {
     fi
     if [[ -z "$result" ]] && command -v nslookup >/dev/null 2>&1; then
         result=$(nslookup "$host" 2>/dev/null | awk '/^Address/ && NR > 2 {print $NF}' | sort -u)
+    fi
+    # nslookup only asks DNS, so also look in /etc/hosts (for names like localhost)
+    if [[ -z "$result" && -r /etc/hosts ]]; then
+        result=$(awk -v h="$host" '$1 !~ /^#/ { for (i = 2; i <= NF; i++) if ($i == h) print $1 }' /etc/hosts | sort -u)
     fi
     echo "$result"
 }

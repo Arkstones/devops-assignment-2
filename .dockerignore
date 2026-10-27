@@ -1,0 +1,22 @@
+# Only app/ is needed inside the image. Everything below stays out of the build context.
+
+# git data
+.git
+.gitignore
+
+# logs and temporary files
+logs
+*.log
+tmp
+*.tmp
+*.swp
+*~
+.DS_Store
+
+# project files the image does not need
+README.md
+test.sh
+grade.sh
+compose.yaml
+Dockerfile
+.dockerignore
