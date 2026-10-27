@@ -1,0 +1,9 @@
+# local logs and temp files
+logs/
+*.log
+tmp/
+
+# editor / OS junk
+*.swp
+*~
+.DS_Store
